@@ -5,8 +5,7 @@ export default function App() {
   const [enteredGoal, setEnteredGoal] = useState('');
   const [courseGoals, setCourseGoals] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [currentGoal, setCurrentGoal] = useState('')
-
+  const [currentGoal, setCurrentGoal] = useState('');
 
   function onChange(goal){
     setEnteredGoal(goal);
@@ -51,6 +50,7 @@ export default function App() {
           <View key={index} style={styles.goal}>
             <Text>{goal}</Text>
             <Button title="Press me" onPress={() => {
+              console.log(goal);
               goalModalOpen(goal);
             }} />
           </View>
@@ -96,7 +96,6 @@ const styles = StyleSheet.create({
     padding: 10
   },
   modalContainer: {
-    display: 'none',
     position: 'absolute',
     width: '100%',
     height: '100%',
