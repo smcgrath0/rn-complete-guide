@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 export default function App() {
   const [enteredGoal, setEnteredGoal] = useState('');
   const [courseGoals, setCourseGoals] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentGoal, setCurrentGoal] = useState('')
 
 
   function onChange(goal){
@@ -15,11 +17,26 @@ export default function App() {
     console.log(enteredGoal);
   }
 
+  const goalModalOpen = (goal) => {
+    setModalOpen(true);
+    setCurrentGoal(goal)
+  }
+
+  const deleteGoal = (goal) => {
+    const newCourseGoals = courseGoals.filter(courseGoal => {
+      if (courseGoal !== goal) {
+        return courseGoal
+      }
+    });
+    setCourseGoals(newCourseGoals);
+    setModalOpen(false);
+  }
+
   return (
     <View style={styles.container}>
-      <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View style={styles.inputContainer}>
         <TextInput
-        style={{width: 200, borderColor: 'black', borderWidth: 1, padding: 10}}
+        style={styles.input}
         placeholder="Course Goal"
         onChangeText={onChange}
         value={enteredGoal}
@@ -28,15 +45,27 @@ export default function App() {
       </View>
       <Text>Good Memes only!</Text>
       <View>
-        {courseGoals.map( goal => {
+        {
+          courseGoals.map( (goal, index) => {
           return (
-          <View style={{borderWidth: 1, borderColor: 'black', width: 200,padding: 5, backgroundColor: 'rgba(155,155,155,0.5)'}}>
+          <View key={index} style={styles.goal}>
             <Text>{goal}</Text>
+            <Button title="Press me" onPress={() => {
+              goalModalOpen(goal);
+            }} />
           </View>
           )
         })
         }
       </View>
+      {modalOpen
+        ? <View style={styles.modalContainer}>
+            <Text>Do you want to delete this goal?</Text>
+            <Button title="DELETE" onPress={() => deleteGoal(currentGoal)}/>
+          </View>
+        : <View></View>
+      }
+
     </View>
   );
 }
@@ -48,4 +77,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  goal: {
+    borderWidth: 1,
+    borderColor: 'black',
+    width: 200,
+    padding: 5,
+    backgroundColor: 'rgba(155,155,155,0.5)'
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  input: {
+    width: 200,
+    borderColor: 'black',
+    borderWidth: 1,
+    padding: 10
+  },
+  modalContainer: {
+    display: 'none',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(100,100,100,0.5)',
+    padding: 50
+  }
 });
